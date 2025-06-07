@@ -3,6 +3,7 @@ import User from "@/models/userModel.js"
 import {NextRequest, NextResponse} from "next/server"
 import bcryptjs from "bcryptjs";
 import toast from "react-hot-toast";
+import { sendEmail } from "@/helpers/mailer";
 
 connect()
 
@@ -33,6 +34,9 @@ export async function POST(request:NextRequest){
 
         const savedUser = await newUser.save()
         console.log("User created successfully",savedUser)
+
+        const rres = await sendEmail({email,emailType:"VERIFY",userId:savedUser._id})    
+        console.log("Email sent successfully",rres)
 
         return NextResponse.json({
             message:"user created successfully",
